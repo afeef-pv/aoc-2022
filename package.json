@@ -1,0 +1,21 @@
+{
+  "name": "aoc-2022",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ramda": "^0.28.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.10",
+    "@types/ramda": "^0.28.20",
+    "ts-node": "^10.9.1",
+    "tsc": "^2.0.4"
+  }
+}
