@@ -1,1 +1,0 @@
-/home/afeef/projects/aoc-2022/day3/target/debug/day3: /home/afeef/projects/aoc-2022/day3/input.txt /home/afeef/projects/aoc-2022/day3/src/a.rs /home/afeef/projects/aoc-2022/day3/src/b.rs /home/afeef/projects/aoc-2022/day3/src/main.rs
