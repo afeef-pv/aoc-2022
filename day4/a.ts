@@ -10,7 +10,12 @@ function isOverlaping(str: string) {
   const splitByComma = curry(split)(',');
   const splitByDash = map(curry(split)('-'));
   const toNumber = map(toInteger);
-  const [a, b, c, d] = pipe(splitByComma, splitByDash, flatMap, toNumber)(str);
+  const [a, b, c, d] = pipe(
+    splitByComma,
+    splitByDash,
+    flatMap,
+    toNumber
+  )(str);
   return (a <= c && b >= d) || (c <= a && d >= b);
 }
 
