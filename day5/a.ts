@@ -37,9 +37,9 @@ function getStacksAndOps(str: string[]) {
 function rearrange(count: number, from: number, to: number, stacks: [string[]]) {
   const fromStack = stacks[from - 1];
   const toStack = stacks[to - 1];
-  const tempStack = [];
+  const tempStack: string[] = [];
   for(let i = 0; i < count; ++i) {
-    tempStack.push(fromStack.pop())
+    tempStack.push(fromStack.pop()!);
   }
   toStack.push(...tempStack as string[]);
   return stacks;

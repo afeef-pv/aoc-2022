@@ -10,39 +10,35 @@ const splitMeBaby = curry(split)('');
 const lineMeBaby = curry(split)('\n');
 const filterMeBaby = curry(filter)((e: any) => e != '');
 
-function amIVisible(trees: [number[]], i: number, j: number) {
+function getSecenicScore(trees: [number[]], i: number, j: number) {
   // go left
   let leftCount = 0;
   for(let left = j + 1; left < trees[0].length; ++left) {
+    ++leftCount;
     if (trees[i][left] >= trees[i][j]) {
-      ++leftCount;
       break;
     }
-    ++leftCount;
   }
   let rightCount = 0;
   for(let right = j - 1; right >= 0; --right) {
+    ++rightCount;
     if (trees[i][right] >= trees[i][j]) {
-      ++rightCount;
       break;
     }
-    ++rightCount;
   }
   let topCount = 0;
   for(let top = i - 1; top >= 0; --top) {
+    ++topCount;
     if (trees[top][j] >= trees[i][j]) {
-      ++topCount;
       break;
     }
-    ++topCount;
   }
   let bottomCount = 0;
   for(let bottom = i + 1; bottom < trees.length; ++bottom) {
+    ++bottomCount;
     if (trees[bottom][j] >= trees[i][j]) {
-      ++bottomCount;
       break;
     }
-    ++bottomCount;
   }
   return (leftCount || 1) * (bottomCount || 1) * (rightCount || 1) * (topCount || 1);
 }
@@ -51,8 +47,8 @@ function getVisilbe(trees: any) {
   let count: number[] = [];
   for (let i = 1; i < trees.length - 1; ++i) {
     for (let j = 1; j < trees[0].length - 1; ++j) {
-      if (amIVisible(trees, i, j)) {
-        count.push(amIVisible(trees, i, j));
+      if (getSecenicScore(trees, i, j)) {
+        count.push(getSecenicScore(trees, i, j));
       }
     }
   }

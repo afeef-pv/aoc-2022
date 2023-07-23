@@ -1,130 +1,64 @@
 import { readFileSync } from "fs";
-import { max } from "lodash";
 import { curry, split, pipe, filter } from "ramda";
 
 function readMeBaby () {
   return readFileSync('./input').toString();
 }
 
-const splitMeBaby = curry(split)('');
 const lineMeBaby = curry(split)('\n');
 const filterMeBaby = curry(filter)((e: any) => e != '');
 
-function gridMeBaby(len: number) {
-  let r: boolean[][] = [];
-  for(let i = 0; i < len; ++i) {
-    let k: boolean[] = []
-    for(let j = 0; j < len; ++j) {
-      k.push(false);
+class Grid {
+  Hx = 0;
+  Hy = 0;
+  Tx = 0;
+  Ty = 0;
+  canvas: { [key: string]: boolean } = {};
+
+  move(dir: string) {
+    const dx: { [key: string]: number } = { "R": 1, "L": -1, "U": 0, "D": 0 };
+    const dy: { [key: string]: number } = { "R": 0, "L": 0, "U": 1, "D": -1 };
+
+    this.Hx += dx[dir];
+    this.Hy += dy[dir];
+
+    let distX = Math.abs(this.Hx - this.Tx);
+    let distY = Math.abs(this.Hy - this.Ty);
+
+    if (this.Hx === this.Tx || this.Hy === this.Ty) {
+         if (distX > 1) {
+            this.Tx += dx[dir];
+         }
+         else if (distY > 1) {
+            this.Ty += dy[dir];
+         }
+    } else {
+      // diagonal
+         if (distX > 1) {
+           this.Tx += dx[dir];
+           this.Ty = this.Hy;
+         }
+         else if (distY > 1) {
+           this.Tx = this.Hx;
+           this.Ty += dy[dir];
+         }
     }
-    r.push(k);
+    this.canvas[`${this.Tx}, ${this.Ty}`] = true;
   }
-  return r;
 }
 
 function walkMeBaby(walks: string[]) {
-  const board: any = {};
-  let Xx = 0, Xy = 0;
-  let Yx = 0, Yy = 0;
+  let grid = new Grid();
   for(const walk of walks) {
-    let count = 0;
-    let dist;
-    const [dir, steps] = walk.split(' ');
-    switch (dir) {
-      case 'R':
-        Xy += +steps;
-        dist = Math.abs(Xy - Yy);
-        if (Xx == Yx) {
-          for(let i = Yy + 1; i < Xy; ++i) {
-            if(!board[`${Yx}_${i}`]) {
-              board[`${Yx}_${i}`] = true;
-            }
-          }
-          Yy = Xy - 1;;
-        } else {
-          dist = dist - 1;
-          if (dist > 1) {
-            for(let i = Yy + 2; i < Xy; ++i) {
-              Yx = Xx;
-              if(!board[`${Yx}_${i}`]) {
-                board[`${Yx}_${i}`] = true;
-              }
-            }
-          }
-        }
-        break;
-      case 'L':
-        Xy -= +steps;
-        dist = Math.abs(Xy - Yy);
-        if (Xx == Yx) {
-          for(let i = Yy; i > Xy; --i) {
-            if(!board[`${Yx}_${i}`]) {
-              board[`${Yx}_${i}`] = true;
-            }
-          }
-          Yy = Xy + 1;
-        } else {
-          // move diagonal then follow
-          if (dist > 1) {
-            for(let i = Yy - 1; i > Yy - dist; --i) {
-              Yx = Xx;
-              if(!board[`${Yx}_${i}`]) {
-                board[`${Yx}_${i}`] = true;
-              }
-            }
-          }
-        }
-        break;
-      case 'U':
-        Xx += +steps;
-      if(Xx == Yx) {
-        for(let i = Yx; i < Xx; ++i) {
-          if(!board[`${i}_${Yy}`]) {
-            board[`${i}_${Yy}`] = true;
-          }
-        }
-        Yy = Xy - 1;
-      }
-      else {
-        dist = Math.abs(Xx - Yx);
-        if(dist > 1) {
-          for(let i = Yx; i < Xx; ++i) {
-            Yy = Xy;
-            if(!board[`${i}_${Yy}`]) {
-              board[`${i}_${Yy}`] = true;
-            }
-          }
-          Yy = Xy - 1;
-        }
-      }
-        break;
-        case 'D':
-          Xx -= +steps;
-        if(Xx == Yx) {
-          for(let i = Yx; i > Xx; --i) {
-            if(!board[`${i}_${Yy}`]) {
-              board[`${i}_${Yy}`] = true;
-            }
-          }
-          Yy = Xy + 1;
-        }
-        else {
-          dist = Math.abs(Xx - Yy);
-          if(dist > 1) {
-            for(let i = Yx; i > Xx; --i) {
-              Yy = Xx;
-              if(!board[`${i}_${Yy}`]) {
-                board[`${i}_${Yy}`] = true;
-              }
-            }
-            Yy = Xy + 1;
-          }
-        }
-        break;
-
+    let dir: string, steps: string | number;
+    [dir, steps] = walk.split(" ");
+    steps = +steps;
+    for (let step = 0; step < steps; ++step) {
+      grid.move(dir);
     }
   }
-  return board;
+
+  return Object.keys(grid.canvas).length;
 }
 
 const solveMeBaby = pipe(
