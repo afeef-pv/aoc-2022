@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import { curry, split, pipe, filter } from "ramda";
 
 function readMeBaby () {
-  return readFileSync('./input').toString();
+  return readFileSync('./src/test_input').toString();
 }
 
 const lineMeBaby = curry(split)('\n');
@@ -58,7 +58,7 @@ function walkMeBaby(walks: string[]) {
     }
   }
 
-  return Object.keys(grid.canvas).length;
+  return Object.keys(grid.canvas);
 }
 
 const solveMeBaby = pipe(
