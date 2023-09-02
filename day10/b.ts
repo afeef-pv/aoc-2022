@@ -36,7 +36,7 @@ function compute(ins: string[]) {
 }
 
 function drawTheBuffer(buffer: number[]) {
-    const display: Array<Array<'#' | '.'>> = [];
+  const display: Array<Array<'#' | '.'>> = [];
   for(let i = 0; i < 6; ++i) {
     let row: Array<'#' | '.'> = []
     for(let j = 0; j < 40; ++j) {

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  .checkerboard {
+    display: grid;
+    grid-template-columns: repeat(82, 16px); /* Adjust the number of columns and size as needed */
+    grid-template-rows: repeat(41, 16px);    /* Adjust the number of rows and size as needed */
+  }
+  .cell {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s;
+    border: 1px solid black;
+  }
+  .cell:hover {
+    background-color: #ccc;
+  }
+</style>
+<title>Graph Me Daddy</title>
+</head>
+
+  <body style="display: flex; flex-direction: row;">
+    <div class="checkerboard" id="checkerboard">
+    </div>
+
+    <div style="display: flex; flex-direction: column; padding: 10px">
+      <label for="algorithms">Algorithm:</label>
+      <select name="algorithm" id="algorithm-select">
+        <option value="bfs">BFS</option>
+        <option value="dfs">DFS</option>
+        <option value="dijkstra">Dijkstra</option>
+      </select>
+      <button id="play-btn">Play</button>
+    </div>
+
+    <script src="index.js">
+    </script>
+  </body>
+</html>
+

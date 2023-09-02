@@ -87,16 +87,17 @@ impl Cords {
 }
 
 struct Grid {
-    head: Cords,
-    tail: Cords,
+    knots: Vec<Cords>,
     canvas: HashMap<String, bool>
 }
 
 impl Default for Grid {
     fn default() -> Self {
-        let head = Cords::default();
-        let tail = Cords::default();
-        return Grid { head, tail, canvas: HashMap::new() }
+        let mut knots: Vec<Cords> = vec![];
+        for _ in 0..10 {
+            knots.push(Cords { x: 0, y: 0 })
+        }
+        return Grid { knots, canvas: HashMap::new() }
     }
 }
 
@@ -121,36 +122,39 @@ impl Grid {
         dy.insert(Direction::Left, 0);
 
 
-        self.head.add(dir.delta());
+        self.knots[0].add(dir.delta());
 
-        let dist_x = self.head.dist_x(&self.tail);
-        let dist_y = self.head.dist_y(&self.tail);
+        for tail in 1..self.knots.len() {
+            let head = tail - 1;
+            let dist_x = self.knots[head].dist_x(&self.knots[tail]);
+            let dist_y = self.knots[head].dist_y(&self.knots[tail]);
 
-        if self.head.diagonal_to(&self.tail) {
-            if dist_x > 1 {
-                self.tail.add(dir.delta());
-                self.tail.y = self.head.y;
+            if self.knots[head].diagonal_to(&self.knots[tail]) {
+                if dist_x > 1 {
+                    self.knots[tail].add(dir.delta());
+                    self.knots[tail].y = self.knots[head].y;
+                }
+                if dist_y > 1 {
+                    self.knots[tail].add(dir.delta());
+                    self.knots[tail].x = self.knots[head].x;
+                }
+            } else {
+                if dist_x > 1 || dist_y > 1 {
+                    self.knots[tail].add(dir.delta());
+                }
             }
-            if dist_y > 1 {
-                self.tail.add(dir.delta());
-                self.tail.x = self.head.x;
-            }
-        } else {
-            if dist_x > 1 || dist_y > 1 {
-                self.tail.add(dir.delta());
-            }
-        }
 
-        let key = format!("{}_{}", self.tail.x, self.tail.y);
-        if !self.canvas.contains_key(&key) {
-            self.canvas.insert(key, true);
+            let key = format!("{}_{}", self.knots[tail].x, self.knots[tail].y);
+            if tail == self.knots.len() - 1 && !self.canvas.contains_key(&key) {
+                self.canvas.insert(key, true);
+            }
         }
     }
 }
 
 pub fn solve() {
     let mut grid = Grid::default();
-    let instructions = include_str!("../input")
+    let instructions = include_str!("test_input")
         .lines()
         .map(|l| {
             l.parse::<Instruction>().unwrap()
@@ -161,3 +165,4 @@ pub fn solve() {
     }
     println!("{:?}", grid.canvas.len());
 }
+
